@@ -1,0 +1,211 @@
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/MyStyle.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link href="https://libs.cdnjs.net/flat-ui/2.3.0/css/flat-ui.min.css" rel="stylesheet"/>
+    <link rel="icon" type="image/png" href="/img/icon/favicon.svg"/>
+    <title>Designed By Mintimate</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+    <script src="https://libs.cdnjs.net/flat-ui/2.3.0/js/flat-ui.min.js"></script>
+    <script src="/js/myClickTool.js"></script>
+    <style>
+        .row {
+            margin-top: 20px;;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .pagination {
+            background: #cccccc;
+        }
+        th{
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $('#myTabs a').click(function (e) {
+                $(this).tab('show')
+            });
+        })
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top text-center">
+    <a class="navbar-brand" href="/">
+				<span style="font-family: 'Handwriting'; background: linear-gradient(to right, #E0E0E0, #FFFFFF);-webkit-background-clip: text;color: transparent; ">
+					<img src="/img/icon/web.svg"/>
+					<span class="align-self-center">文件管理</span>
+				</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item ml-3">
+                <a class="nav-link" href="/imageType" >
+                    图床
+                </a>
+            </li>
+            <!--Homebrew-->
+            <li class="nav-item dropdown ml-3">
+                <a class="nav-link dropdown-toggle" href="#" id="fileHost" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    文件中转站
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="fileHost">
+                    <a class="dropdown-item text-light " href="/fileType?type=Magisk">Magisk</a>
+                    <a class="dropdown-item text-light " href="/fileType?type=Minecraft">Minecraft</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-light" href="/fileType">中转站</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-3 active">
+                <a class="nav-link dropdown-toggle" href="#" id="infoDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    数据中心
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="infoDropdown">
+                    <a class="dropdown-item text-light " href="/fileType/dataInfo?type=Magisk">Magisk</a>
+                    <a class="dropdown-item text-light" href="/fileType/dataInfo?type=Minecraft">Minecraft</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-light " href="/fileType/homebrew">Homebrew</a>
+                </div>
+            </li>
+        </ul>
+        <!-- 导航栏右侧 -->
+        <ul class="navbar-nav">
+            <li class="nav-item ml-xl-3 align-content-center">
+                <a href="/support" class="nav-link">创作支持</a>
+            </li>
+            <li class="nav-item ml-xl-3">
+                <a th:if="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/login" class="nav-link ">登录</a>
+                <div th:unless="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/admin" onclick="goToAdmin()" class="border bg-light text-dark btn">
+                    <img class="rounded-circle" style=" height:1.9rem;" src="http://q1.qlogo.cn/g?b=qq&nk=2503126249&s=100" /> <span class="align-text-top" style="padding-left: 0.625rem;">Mintimate</span>
+                </div>
+            </li>
+        </ul><!-- 导航栏右侧end -->
+    </div>
+</nav>
+<!--内容部分-->
+<div class="container-lg pt-5 mt-5">
+    <div class="row bg-light pb-5">
+        <div class="col-sm-12 text-center">
+            <h3 style="font-family: Handwriting"><span class="align-bottom">文件中转站</span>
+            </h3>
+            <form action="/fileType/dataInfo" method="get">
+                <div class="row">
+                    <div class="col-sm-3 input-group-prepend text-left">
+                    <span th:if="${detailType}==null">
+                        <span class="input-group-text" >当前分类：ALL</span>
+                    </span>
+                        <span th:unless="${detailType}==null">
+                        <span class="input-group-text" th:text="'当前分类： ' + ${detailType}">当前分类：NULL</span>
+                    </span>
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-4">
+                        <select name="detailType" class="custom-select">
+                        <span th:each="type:${filetype}">
+                            <option th:value="${type}" th:text="${type}" value="ALL">ALL</option>
+                        </span>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-info btn-block">搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-12">
+            <table id="tableSort" class="table">
+                <thead id="HeadTD" class="thead-dark text-center">
+                <tr>
+                    <th data-type="string" scope="col">文件名</th>
+                    <th data-type="date">最后下载</th>
+                    <th data-type="num" scope="col">预计消耗流量(单位:MB)</th>
+                    <th data-type="num" scope="col">累计调取次数</th>
+                    <th:block th:with="var1=0"></th:block>
+                </tr>
+                </thead>
+                <tbody id="ContTD" class="text-center">
+                <tr th:each="file:${fileList}">
+                    <th style="vertical-align: middle" th:text="${file.getFileName()}" scope="row">${document.document_name}</th>
+                    <td style="vertical-align: middle" th:text="${#dates.format(file.getUpdateDate(),'yyyy-MM-dd HH:mm:ss')}">${document.creation_date}</td>
+                    <td style="vertical-align: middle" th:text="${#numbers.formatDecimal(file.getFileSize()*file.getDownloadCount()/(1024*1024),1,2)}">${document.file_size}</td>
+                    <td style="vertical-align: middle" th:text="${file.getDownloadCount()}">${document.download_count}</td>
+                    <th:block th:with="var1=${#var1}"></th:block>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+            <div class="col-6 text-center">
+                总调取次数：<span th:text="${fileDownloadTotal}" style="background: linear-gradient(to right, #F97794, #623AA2);
+        -webkit-background-clip: text;
+        color: transparent;">NULL</span>
+            </div>
+            <div class="col-6 text-center">
+                预计已消耗流量：<span th:text="${#numbers.formatDecimal(fileSizeTotal/(1024*1024),1,2)}" style="background: linear-gradient(to right, #F97794, #623AA2);
+        -webkit-background-clip: text;
+        color: transparent;">NULL</span>
+            </div>
+    </div>
+</div>
+<script>
+    ;(function(){
+        var tbody = document.querySelector('#tableSort').tBodies[0];
+        var th = document.querySelector('#tableSort').tHead.rows[0].cells;
+        var td = tbody.rows;
+        for(var i = 0;i < th.length;i++){
+            th[i].flag = 1;
+            th[i].onclick = function(){
+                sort(this.getAttribute('data-type'),this.flag,this.cellIndex);
+                this.flag = -this.flag;
+            };
+        };
+        function sort(str,flag,n){
+            var arr = [];//存放DOM
+            for(var i = 0;i < td.length;i++){
+                arr.push(td[i]);
+            };
+            arr.sort(function(a,b){//排序
+                return method(str,a.cells[n].innerHTML,b.cells[n].innerHTML) * flag;
+            });
+            for(var i = 0;i < arr.length;i++){//添加
+                tbody.appendChild(arr[i]);
+            };
+        };
+        function method(str,a,b){//排序方法
+            switch(str){
+                case 'num':
+                    return a-b;
+                    break;
+                case 'string':
+                    return a.localeCompare(b);
+                    break;
+                default://日期排序，IE8下'2012-12-12'这种格式无法设置时间，替换成'/'
+                    return new Date(a.split('-').join('/')).getTime()-new Date(b.split('-').join('/')).getTime();
+            };
+        };
+    })();
+</script>
+</body>
+</html>
+

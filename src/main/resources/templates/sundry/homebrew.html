@@ -1,0 +1,178 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="zh">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/MyStyle.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link href="https://libs.cdnjs.net/flat-ui/2.3.0/css/flat-ui.min.css" rel="stylesheet"/>
+    <link rel="icon" type="image/png" href="/img/icon/favicon.svg"/>
+    <title>Designed By Mintimate</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+    <script src="https://libs.cdnjs.net/flat-ui/2.3.0/js/flat-ui.min.js"></script>
+    <script src="/js/myClickTool.js"></script>
+    <style>
+        .row {
+            margin-top: 20px;;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .pagination {
+            background: #cccccc;
+        }
+    </style>
+    <script type="text/javascript" th:inline="text">
+        $(function () {
+            $("#next").click(function () {
+                var pages = parseInt($("#pages").html());
+                var page = parseInt($("#currentPage").html());
+                if (page == pages) {
+                    return;
+                }
+                page++;
+                location.href = "/fileType?type=[[${type}]]&page=" + page;
+            })
+
+            $("#previous").click(function () {
+                var page = parseInt($("#currentPage").html());
+                if (page == 1) {
+                    return;
+                }
+                page--;
+                location.href = "/fileType?type=[[${type}]]&page=" + page;
+            })
+
+            $("#first").click(function () {
+                location.href = "/fileType?type=[[${type}]]&page=1";
+            })
+
+            $("#last").click(function () {
+                var pages = parseInt($("#pages").html());
+                location.href = "/fileType?type=[[${type}]]&page=" + pages;
+            })
+        })
+        $(function () {
+            $('#myTabs a').click(function (e) {
+                $(this).tab('show')
+            });
+        })
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top text-center">
+    <a class="navbar-brand" href="/">
+				<span style="font-family: 'Handwriting'; background: linear-gradient(to right, #E0E0E0, #FFFFFF);-webkit-background-clip: text;color: transparent; ">
+					<img src="/img/icon/web.svg"/>
+					<span class="align-self-center">文件管理</span>
+				</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item ml-3">
+                <a class="nav-link" href="/imageType" >
+                    图床
+                </a>
+            </li>
+            <!--Homebrew-->
+            <li class="nav-item dropdown ml-3">
+                <a class="nav-link dropdown-toggle" href="#" id="fileHost" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    文件中转站
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="fileHost">
+                    <a class="dropdown-item text-light " href="/fileType?type=Magisk">Magisk</a>
+                    <a class="dropdown-item text-light " href="/fileType?type=Minecraft">Minecraft</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-light" href="/fileType">中转站</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-3 active">
+                <a class="nav-link dropdown-toggle" href="#" id="infoDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    数据中心
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="infoDropdown">
+                    <a class="dropdown-item text-light " href="/fileType/dataInfo?type=Magisk">Magisk</a>
+                    <a class="dropdown-item text-light" href="/fileType/dataInfo?type=Minecraft">Minecraft</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-light " href="/fileType/homebrew">Homebrew</a>
+                </div>
+            </li>
+        </ul>
+        <!-- 导航栏右侧 -->
+        <ul class="navbar-nav">
+            <li class="nav-item ml-xl-3 align-content-center">
+                <a href="/support" class="nav-link">创作支持</a>
+            </li>
+            <li class="nav-item ml-xl-3">
+                <a th:if="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/login" class="nav-link ">登录</a>
+                <div th:unless="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/admin" onclick="goToAdmin()" class="border bg-light text-dark btn">
+                    <img class="rounded-circle" style=" height:1.9rem;" src="http://q1.qlogo.cn/g?b=qq&nk=2503126249&s=100" /> <span class="align-text-top" style="padding-left: 0.625rem;">Mintimate</span>
+                </div>
+            </li>
+        </ul><!-- 导航栏右侧end -->
+    </div>
+</nav>
+<!--内容部分-->
+<div class="container-lg pt-5 mt-5">
+    <div class="row bg-light">
+        <div class="col-12 text-center">
+            <h3 class="text-center" style="font-family: Handwriting"><span class="align-bottom">Homebrew</span>
+            </h3>
+        </div>
+        <div class="col-12">
+            <table class="table">
+                <thead class="thead-dark text-center">
+                <tr>
+                    <th scope="col">Homebrew类型</th>
+                    <th scope="col">最后调取时间</th>
+                    <th scope="col">累计调取次数</th>
+                </tr>
+                </thead>
+                <tbody class="text-center">
+                <tr th:each="file:${fileList}">
+                    <th style="vertical-align: middle" th:text="${file.getFileName()}" scope="row">Null</th>
+                    <td style="vertical-align: middle" th:text="${#dates.format(file.getUpdateDate(),'yyyy-MM-dd HH:mm:ss')}">Null</td>
+                    <td style="vertical-align: middle" th:text="${file.getDownloadCount()}">Null</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12 text-center">
+            总调取次数：<span th:text="${fileDownloadTotal}" style="background: linear-gradient(to right, #F97794, #623AA2);
+        -webkit-background-clip: text;
+        color: transparent;">NULL</span>
+        </div>
+        <div class="col-12 pt-2 text-center">
+                    <span style="font-size: smaller;background: linear-gradient(to right, #C02425, #ff4901);
+        -webkit-background-clip: text;
+        color: transparent;">Tips</span>
+            <ul class="list-group" style="font-size: small">
+                <li class="list-group-item"><span style="color: #F97794">安装Homebrew，终端输入:<span style="color: #fd084b">/bin/zsh -c "$(curl -fsSL '150.158.155.98:8080/fileHost/download/1')"</span></span></li>
+                <li class="list-group-item"><span style="color: #F97794">卸载Homebrew，终端输入:<span style="color: #fd084b">/bin/zsh -c "$(curl -fsSL '150.158.155.98:8080/fileHost/download/2')"</span></span></li>
+                <li class="list-group-item"><a href="/support">Mac技术支持:点击这里(●ˇ∀ˇ●)</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mintimate.filecloudplus.dao.FileHostMapper">
+    <select id="selectAll" resultType="cn.mintimate.filecloudplus.entity.FileHost">
+select * from file_host where deleted=0
+</select>
+    <select id="selectAllByType" resultType="cn.mintimate.filecloudplus.entity.FileHost">
+select * from file_host where file_type = #{param1} and deleted=0
+</select>
+    <select id="selectAllByDetail" resultType="cn.mintimate.filecloudplus.entity.FileHost">
+select * from file_host where file_type_detail = #{param1} and deleted=0
+</select>
+    <select id="selectAllByTypeDetail" resultType="cn.mintimate.filecloudplus.entity.FileHost">
+select * from file_host where file_type = #{param1} and file_type_detail = #{param2} and deleted=0
+</select>
+    <select id="selectFile" resultType="cn.mintimate.filecloudplus.entity.FileHost">
+select * from file_host where deleted=0 limit #{param1}, #{param2}
+</select>
+    <select id="selectFileByType" resultType="cn.mintimate.filecloudplus.entity.FileHost">
+select * from file_host where file_type= #{param3} and deleted=0 limit #{param1},#{param2}
+</select>
+    <select id="selectFileByTypeDetail" resultType="cn.mintimate.filecloudplus.entity.FileHost">
+select * from file_host where file_type_detail= #{param3} and deleted=0 limit #{param1},#{param2}
+</select>
+</mapper>

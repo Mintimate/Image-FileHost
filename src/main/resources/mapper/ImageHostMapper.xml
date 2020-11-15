@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mintimate.filecloudplus.dao.ImageHostMapper">
+    <select id="selectAll" resultType="cn.mintimate.filecloudplus.entity.ImageHost">
+select * from image_host where deleted=0
+</select>
+    <select id="selectAllByType" resultType="cn.mintimate.filecloudplus.entity.ImageHost">
+select * from image_host where deleted=0 and image_type = #{param1}
+</select>
+    <select id="selectImage" resultType="cn.mintimate.filecloudplus.entity.ImageHost">
+select * from image_host where deleted=0 limit #{param1}, #{param2}
+</select>
+    <select id="selectImageByType" resultType="cn.mintimate.filecloudplus.entity.ImageHost">
+select * from image_host where deleted=0 and image_type= #{param3} limit #{param1},#{param2}
+</select>
+</mapper>

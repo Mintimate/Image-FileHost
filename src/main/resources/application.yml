@@ -1,0 +1,28 @@
+spring:
+  resources:
+    static-locations: classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, classpath:/public/, file:${upload.dir}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/filecloudplus?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: filecloud
+    password: 20000215
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: LEGACYHTML5
+  servlet:
+    multipart:
+      max-file-size: 2000MB
+      max-request-size: 2000MB
+mybatis-plus:
+  type-enums-package: cn.mintimate.filecloud.dao
+  global-config:
+    db-config:
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+  mapper-locations: classpath:/mapper/*.xml
+upload.dir: file
+server:
+  servlet:
+    session:
+      timeout: 90m

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="zh">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/MyStyle.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+          crossorigin="anonymous"/>
+    <link href="https://libs.cdnjs.net/flat-ui/2.3.0/css/flat-ui.min.css" rel="stylesheet"/>
+    <link rel="icon" type="image/png" href="/img/icon/favicon.svg"/>
+    <title>Designed By Mintimate</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+    <script src="https://libs.cdnjs.net/flat-ui/2.3.0/js/flat-ui.min.js"></script>
+    <script src="/js/myClickTool.js"></script>
+    <style>
+        .row {
+            margin-top: 20px;;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .pagination {
+            background: #cccccc;
+        }
+    </style>
+    <script>
+        $(function () {
+            $('#myTabs a').click(function (e) {
+                $(this).tab('show')
+            });
+        })
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top text-center">
+    <a class="navbar-brand" href="/">
+				<span style="font-family: 'Handwriting'; background: linear-gradient(to right, #E0E0E0, #FFFFFF);-webkit-background-clip: text;color: transparent; ">
+					<img src="/img/icon/web.svg"/>
+					<span class="align-self-center">文件管理</span>
+				</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item ml-3">
+                <a class="nav-link" href="/imageType" >
+                    图床
+                </a>
+            </li>
+            <!--Homebrew-->
+            <li class="nav-item dropdown ml-3">
+                <a class="nav-link dropdown-toggle" href="#" id="fileHost" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    文件中转站
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="fileHost">
+                    <a class="dropdown-item text-light " href="/fileType?type=Magisk">Magisk</a>
+                    <a class="dropdown-item text-light " href="/fileType?type=Minecraft">Minecraft</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-light" href="/fileType">中转站</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-3">
+                <a class="nav-link dropdown-toggle" href="#" id="infoDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    数据中心
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="infoDropdown">
+                    <a class="dropdown-item text-light " href="/fileType/dataInfo?type=Magisk">Magisk</a>
+                    <a class="dropdown-item text-light" href="/fileType/dataInfo?type=Minecraft">Minecraft</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-light " href="/fileType/homebrew">Homebrew</a>
+                </div>
+            </li>
+        </ul>
+        <!-- 导航栏右侧 -->
+        <ul class="navbar-nav">
+            <li class="nav-item ml-xl-3 align-content-center">
+                <a href="/support" class="nav-link">创作支持</a>
+            </li>
+            <li class="nav-item ml-xl-3">
+                <a th:if="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/login" class="nav-link ">登录</a>
+                <div th:unless="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/admin" onclick="goToAdmin()" class="border bg-light text-dark btn">
+                    <img class="rounded-circle" style=" height:1.9rem;" src="http://q1.qlogo.cn/g?b=qq&nk=2503126249&s=100" /> <span class="align-text-top" style="padding-left: 0.625rem;">Mintimate</span>
+                </div>
+            </li>
+        </ul><!-- 导航栏右侧end -->
+    </div>
+</nav>
+<!--content-->
+<div class="container-lg pt-5 mt-5">
+    <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+            <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <a href="https://www.mintimate.cn" target="_blank">
+                    <img src="/img/index01.png" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Mintimate's Blog</h5>
+                        <p>Mintimate的博客，只为与你分享。不定期分享干货。</p>
+                    </div>
+                </a>
+            </div>
+            <div class="carousel-item">
+                <a href="https://space.bilibili.com/355567627" target="_blank">
+                    <img src="/img/index02.png" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Bilibili</h5>
+                        <p>本站官方Bilibili账号，分享一些使用教程和干货～</p>
+                    </div>
+                </a>
+            </div>
+            <div class="carousel-item">
+                <a href="https://github.com/Mintimate" target="_blank">
+                    <img src="/img/index03.png" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Mintimate's Github</h5>
+                        <p>Github……</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+    <div class="row">
+        <div class="col">
+            <hr class="border border-light">
+        </div>
+        <div style="font-family: 'Handwriting'; font-size: x-large;"
+             class="col-auto text-dark border bg-white rounded-circle">近期更新
+        </div>
+        <div class="col">
+            <hr class="border border-light">
+        </div>
+    </div>
+    <div class="row bg-light">
+        <div class="col-md-6 offset-md-3">
+            <h4>Latest News</h4>
+            <ul class="timeline ">
+                <li>
+                    <a href="#">更新代码、架构<span style="font-size: smaller;color: crimson">置顶</span></a>
+                    <a href="#" class="float-right">2020.11.15</a>
+                    <p>更改架构为Springboot</p>
+                    <p>修改数据库架构为Mybatis Plus</p>
+                    <p>增加文件中转站功能</p>
+                    <p>调整部分页面操作逻辑和布局</p>
+                </li>
+                <li>
+                    <a href="#">添加功能、更新代码&nbsp;</a>
+                    <a href="#" class="float-right">2020.10.07</a>
+                    <p>添加Magisk Stub App源（用于随机包名）</p>
+                    <p>修改数据库</p>
+                    <p>修改Homebrew源使用向导</p>
+                </li>
+                <li>
+                    <a href="#">添加功能</a>
+                    <a href="#" class="float-right">2020.08.30</a>
+                    <p>更新Mac Homebrew国内安装/卸载源</p>
+                    <p>大幅度修改底层代码</p>
+                </li>
+                <li>
+                    <a href="#">更新代码、功能</a>
+                    <a href="#" class="float-right">2020.07.12</a>
+                    <p>添加Uninstaller数据统计、App数据统计</p>
+                    <p>修复大量bug</p>
+                    <p>更改大量网站逻辑</p>
+                </li>
+                <li>
+                    <a href="#">修改部分bug</a>
+                    <a href="#" class="float-right">2020.07.08</a>
+                    <p>修改中文提示不对、图片内容不对问题</p>
+                </li>
+                <li>
+                    <a href="#">更新代码、功能</a>
+                    <a href="#" class="float-right">2020.07.07</a>
+                    <p>网站权限更改、添加“创造支持”页面</p>
+                </li>
+                <li>
+                    <a href="#">更新代码</a>
+                    <a href="#" class="float-right">2020.07.05</a>
+                    <p>同步Magisk更新源</p>
+                </li>
+                <li>
+                    <a href="#">项目开始</a>
+                    <a href="#" class="float-right">2020.07.04</a>
+                    <p>开始搭建项目</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<!--footer-->
+<footer class=" navbar-fixed-bottom mt-5 ">
+    <div class="text-center"><span style="color: #121416;">版权声明区</span></div>
+</footer>
+</body>
+</html>
