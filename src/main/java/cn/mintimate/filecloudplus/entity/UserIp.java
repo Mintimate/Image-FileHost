@@ -36,7 +36,7 @@ public class UserIp implements Serializable {
 
     private String targetClassify;
 
-    private Integer targetId;
+    private Long targetId;
 
 
 }

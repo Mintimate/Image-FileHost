@@ -6,6 +6,7 @@ import cn.mintimate.filecloudplus.entity.ImageHost;
 import cn.mintimate.filecloudplus.entity.UserIp;
 import cn.mintimate.filecloudplus.service.ImageHostService;
 import cn.mintimate.filecloudplus.service.UserIpService;
+import cn.mintimate.filecloudplus.util.base64Encode;
 import cn.mintimate.filecloudplus.util.getUserIP;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.UUID;
 
 /**
@@ -87,6 +89,7 @@ public class ImageHostController {
     @GetMapping(value = "/getImage/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
     public byte[]  getImage(@PathVariable(value = "id", required = false) String id, HttpServletRequest req) throws IOException {
+        id= base64Encode.reverseBase64(id);
         try (InputStream is = new FileInputStream(System.getProperty("user.dir")+"/file"+imageHostService.getById(id).getPath())){
             byte[] bytes = new byte[is.available()];
             is.read(bytes, 0, is.available());
@@ -98,7 +101,7 @@ public class ImageHostController {
             //记录IP
             UserIp userIp=new UserIp();
             userIp.setTargetClassify("ImageHost");
-            userIp.setTargetId(Integer.valueOf(id));
+            userIp.setTargetId(Long.valueOf(id));
             userIp.setUserIp(getUserIP.getIpAddr(req));
             userIpService.save(userIp);
             is.close();
@@ -108,14 +111,15 @@ public class ImageHostController {
 
     @GetMapping(value = "/download/{id}")
     public void download(@PathVariable(value = "id", required = false) String id, HttpServletResponse response, HttpServletRequest request) {
+        id= base64Encode.reverseBase64(id);
         try {
             File file = new File(System.getProperty("user.dir")+"/file"+imageHostService.getById(id).getPath());
             // 穿件输入对象
             FileInputStream fis = new FileInputStream(file);
             // 设置相关格式
             response.setContentType("application/force-download");
-            // 设置下载后的文件名以及header
-            response.addHeader("Content-disposition", "attachment;fileName=" + imageHostService.getById(id).getImageName());
+            // 设置下载后的文件名以及header(UTF-8)
+            response.addHeader("Content-disposition", "attachment;fileName=" + URLEncoder.encode(imageHostService.getById(id).getImageName(), "UTF-8"));
             // 创建输出对象
             OutputStream os = response.getOutputStream();
             // 常规操作
@@ -133,7 +137,7 @@ public class ImageHostController {
             //记录IP
             UserIp userIp=new UserIp();
             userIp.setTargetClassify("ImageHost");
-            userIp.setTargetId(Integer.valueOf(id));
+            userIp.setTargetId(Long.valueOf(Integer.valueOf(id)));
             userIp.setUserIp(getUserIP.getIpAddr(request));
             userIpService.save(userIp);
         } catch (FileNotFoundException e) {
@@ -145,13 +149,16 @@ public class ImageHostController {
 
     @GetMapping("/imageDetail/{id}")
     public String getDetail(@PathVariable(value = "id", required = false) String id, Model model){
-        model.addAttribute("imgDetail",imageHostService.getById(id));
+        ImageHost imageHost=imageHostService.getById(base64Encode.reverseBase64(id));
+        imageHost.setId(id);
+        model.addAttribute("imgDetail",imageHost);
         return "ih/imageDetail";
     }
 
     @GetMapping(value = "/delete/{id}")
     @ResponseBody
     public String delete(@PathVariable(value = "id", required = false) String id){
+        id= base64Encode.reverseBase64(id);
         File file = new File(System.getProperty("user.dir")+"/file"+imageHostService.getById(id).getPath());
         if(file.exists()){
             imageHostService.removeById(id);

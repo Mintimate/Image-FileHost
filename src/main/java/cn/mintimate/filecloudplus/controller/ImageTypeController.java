@@ -1,9 +1,11 @@
 package cn.mintimate.filecloudplus.controller;
 
 
+import cn.mintimate.filecloudplus.entity.ImageHost;
 import cn.mintimate.filecloudplus.entity.ImageType;
 import cn.mintimate.filecloudplus.service.ImageHostService;
 import cn.mintimate.filecloudplus.service.ImageTypeService;
+import cn.mintimate.filecloudplus.util.base64Encode;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -36,7 +38,7 @@ public class ImageTypeController {
     private ImageHostService imageHostService;
 //    ModelAndView modelAndView = new ModelAndView();
 
-//    @RequestMapping
+    //    @RequestMapping
 //    public ModelAndView index() {
 //        modelAndView.setViewName("ih/imageType");
 //        modelAndView.addObject("imageType", imageTypeService.list());
@@ -44,8 +46,8 @@ public class ImageTypeController {
 //        return modelAndView;
 //    }
     @GetMapping
-    public String imageType(Model model, @RequestParam(required = false, value = "type") String type, @RequestParam(required = false, value = "page") String page,HttpServletRequest req){
-        List list;
+    public String imageType(Model model, @RequestParam(required = false, value = "type") String type, @RequestParam(required = false, value = "page") String page, HttpServletRequest req) {
+        List<ImageHost> list;
         //分页功能
         //没有指定页数，默认为第一页
         if (page == null) {
@@ -54,23 +56,27 @@ public class ImageTypeController {
         HttpSession session = req.getSession();
         session.setAttribute("dataPrePage", 8);
         session.setAttribute("currentPage", page);
-        if(type==null||type==""){
+        if (type == null || type == "") {
             session.setAttribute("pages", imageHostService.getPages());
             list = imageHostService.FindImages(Integer.parseInt(page));
-        }
-        else {
+        } else {
             session.setAttribute("pages", imageHostService.getPages(type));
-            list = imageHostService.FindImages(Integer.parseInt(page),type);
+            list = imageHostService.FindImages(Integer.parseInt(page), type);
         }
-        model.addAttribute("type",type);
+        list.forEach(item -> {
+            String temp= String.valueOf(item.getId());
+            temp=base64Encode.convertToBase64(temp);
+            item.setId(temp);
+        });
+        model.addAttribute("type", type);
         model.addAttribute("imageHost", list);
         model.addAttribute("imageType", imageTypeService.list());
         return "ih/imageType";
     }
 
     @RequestMapping("/addType")
-    public String addType(Model model,@RequestParam(value = "newType",required = false) String newType){
-        ImageType image=new ImageType();
+    public String addType(Model model, @RequestParam(value = "newType", required = false) String newType) {
+        ImageType image = new ImageType();
         image.setImageType(newType);
         imageTypeService.save(image);
         model.addAttribute("imageTypes", imageTypeService.list());
@@ -78,11 +84,11 @@ public class ImageTypeController {
     }
 
     @RequestMapping("/RemoveType")
-    public String removeType(Model model,@RequestParam(value = "newType",required = false) String newType){
-        ImageType image=new ImageType();
+    public String removeType(Model model, @RequestParam(value = "newType", required = false) String newType) {
+        ImageType image = new ImageType();
         image.setImageType(newType);
-        QueryWrapper wrapper=new QueryWrapper();
-        wrapper.eq("image_Type",newType);
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("image_Type", newType);
         // 在imageType实体表内删除该分类（非逻辑删除）
         imageTypeService.remove(wrapper);
         // 在imageHost实体表内删除该分类下图片（逻辑删除）

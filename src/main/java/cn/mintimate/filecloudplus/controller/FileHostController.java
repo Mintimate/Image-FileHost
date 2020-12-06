@@ -114,7 +114,7 @@ public class FileHostController {
             //记录IP
             UserIp userIp=new UserIp();
             userIp.setTargetClassify(fileHost.getFileType()+"-"+fileHost.getFileTypeDetail());
-            userIp.setTargetId(Integer.valueOf(id));
+            userIp.setTargetId(Long.valueOf(Integer.valueOf(id)));
             userIp.setUserIp(getUserIP.getIpAddr(request));
             userIpService.save(userIp);
         } catch (FileNotFoundException e) {
