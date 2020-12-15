@@ -89,11 +89,17 @@
 <div class="container mt-5 pt-5">
     <div class="row thumbnail">
         <div class="col-sm-12 text-center">
-            <h3 style="font-family: Handwriting"><span class="align-bottom">用户登录</span><span class="align-bottom" style="font-size: large;">User Login </span></h3>
+            <h3 style="font-family: Handwriting"><span class="align-bottom">用户注册</span><span class="align-bottom" style="font-size: large;">User Login </span></h3>
         </div>
         <div class="row">
-            <div class="col-sm-6">
-                <form class="form-horizontal caption" action="/userAdmin/enter" method="post">
+            <div class="col-md-12 col-lg-6">
+                <form class="form-horizontal caption" action="/userAdmin/register" method="post">
+                    <div class="form-group">
+                        <label for="userEmail" class="col-sm-3 control-label">用户邮箱</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="userEmail" id="userEmail" placeholder="用户邮箱">
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="username" class="col-sm-3 control-label">用户名</label>
                         <div class="col-sm-8">
@@ -107,19 +113,71 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-9">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox">记住我
-                                </label>
-                            </div>
+                        <label for="password1" class="col-sm-3 control-label">确认密码</label>
+                        <div class="col-sm-8">
+                            <input onkeyup="validate()" type="password" class="form-control" name="password1" id="password1" placeholder="确认密码">
+                        </div>
+                        <div class="col-sm-8">
+                            <span id="tip"></span>
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="password" class="col-sm-3 control-label">验证码</label>
+                        <div class="col-sm-8">
+                            <label>
+                                <button id="mail" type="button" class="btn btn-dark mb-1">获取验证码</button>
+                            </label>
+                            <label>
+                                <input type="text" id="code" name="code" class="form-control" placeholder="输入验证码">
+                            </label>
+                        </div>
+                        <script>
+                            $('#mail').on('click',function(){
+                                var that = $(this)
+                                var timeo = 60;
+                                var timeStop = setInterval(function(){
+                                    timeo--;
+                                    if (timeo>0) {
+                                        that.text('重新发送' + timeo +'s');
+                                        that.attr('disabled','disabled');//禁止点击
+                                    }else{
+                                        timeo = 60;//当减到0时赋值为60
+                                        that.text('获取验证码');
+                                        clearInterval(timeStop);//清除定时器
+                                        that.removeAttr('disabled');//移除属性，可点击
+                                    }
+                                },1000)
+                            })
+                            var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+                            var btn = document.getElementById("mail");
+                            btn.onclick=function (){
+                                var email = document.getElementById("userEmail").value;
+                                httpRequest.open('GET', '/userAdmin/email?email='+email, true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+                                httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+                                console.log(email)
+                            }
+                        </script>
+                    </div>
+                    <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-5">
-                            <button type="submit" class="btn btn-success btn-block">登录</button>
+                            <button type="submit" id="submit" disabled="disabled" class="btn btn-success btn-block">注册</button>
                         </div>
                     </div>
+                    <script type="text/javascript">
+                        function validate() {
+                            var pwd1 = document.getElementById("password").value;
+                            var pwd2 = document.getElementById("password1").value;
+                            <!-- 对比两次输入的密码 -->
+                            if(pwd1 == pwd2) {
+                                document.getElementById("tip").innerHTML="<span style='font-size: small;color: #00bfa5' >两次密码相同</span>";
+                                document.getElementById("submit").disabled = false;
+                            }
+                            else {
+                                document.getElementById("tip").innerHTML="<span style='font-size: small;color: #ff3d00'>两次密码不相同</span>";
+                                document.getElementById("submit").disabled = true;
+                            }
+                        }
+                    </script>
                 </form>
             </div>
             <div class="col-sm-6">
@@ -129,8 +187,8 @@
                     <a href="/support" class="btn btn-embossed text-center">
                         <span style="color: palevioletred;">不知道怎么联系我?点此查看</span>
                     </a>
-                    <a href="/userAdmin/register" class="btn btn-embossed text-center">
-                        <span style="color: palevioletred;">没有账号?点此注册普通用户</span>
+                    <a href="/userAdmin/login" class="btn btn-embossed text-center">
+                        <span style="color: palevioletred;">已经有普通用户或者管理员账号?点此登录</span>
                     </a>
                 </div>
 

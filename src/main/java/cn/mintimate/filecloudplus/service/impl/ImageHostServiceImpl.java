@@ -4,9 +4,9 @@ import cn.mintimate.filecloudplus.entity.ImageHost;
 import cn.mintimate.filecloudplus.dao.ImageHostMapper;
 import cn.mintimate.filecloudplus.service.ImageHostService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Service
 public class ImageHostServiceImpl extends ServiceImpl<ImageHostMapper, ImageHost> implements ImageHostService {
-    @Autowired
+    @Resource
     ImageHostMapper mapper;
     // 一页几张图
     private final int LIMIT = 8;

@@ -15,13 +15,13 @@ import java.util.List;
  * @since 2020-10-27
  */
 public interface FileHostMapper extends BaseMapper<FileHost> {
-    List<ImageHost> selectAll();
-    List<ImageHost> selectAllByType(String file_type);
-    List<ImageHost> selectAllByDetail(String file_type_detail);
-    List<ImageHost> selectAllByTypeDetail(String file_type,String file_type_detail);
-    List<ImageHost> selectFile(int index,int limit);
-    List<ImageHost> selectFileByType(int index,int limit,String file_type);
-    List<ImageHost> selectFileByTypeDetail(int index,int limit,String file_type_detail);
+    List<FileHost> selectAll();
+    List<FileHost> selectAllByType(String file_type);
+    List<FileHost> selectAllByDetail(String file_type_detail);
+    List<FileHost> selectAllByTypeDetail(String file_type,String file_type_detail);
+    List<FileHost> selectFile(int index,int limit);
+    List<FileHost> selectFileByType(int index,int limit,String file_type);
+    List<FileHost> selectFileByTypeDetail(int index,int limit,String file_type_detail);
 
 
 }

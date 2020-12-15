@@ -78,12 +78,22 @@ public class ImageHostController {
             file.transferTo(dest);
             imageHostService.save(imageHost);
             model.addAttribute("status","success");
-            return "manager/admin";
+            if(request.getSession().getAttribute("userRole").equals(99)) {
+                return "manager/admin";
+            }
+            else {
+                return "manager/consumer";
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         model.addAttribute("status","error");
-        return "manager/admin";
+        if(request.getSession().getAttribute("userRole").equals(99)) {
+            return "manager/admin";
+        }
+        else {
+            return "manager/consumer";
+        }
     }
 
     @GetMapping(value = "/getImage/{id}",produces = MediaType.IMAGE_JPEG_VALUE)

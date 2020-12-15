@@ -126,7 +126,7 @@
             <li class="nav-item ml-xl-3">
                 <a th:if="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/login" class="nav-link ">登录</a>
                 <div th:unless="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/admin" onclick="goToAdmin()" class="border bg-light text-dark btn">
-                    <img class="rounded-circle" style=" height:1.9rem;" src="http://q1.qlogo.cn/g?b=qq&nk=2503126249&s=100" /> <span class="align-text-top" style="padding-left: 0.625rem;">Mintimate</span>
+                    <img class="rounded-circle" style=" height:1.9rem;" th:src="@{'https://v1.alapi.cn/api/avatar?size=100&email='+${#httpServletRequest.getSession().getAttribute('sessionEmail')}}"> <span th:text="${#httpServletRequest.getSession().getAttribute('sessionUser')}" class="align-text-top" style="padding-left: 0.625rem;">Mintimate</span>
                 </div>
             </li>
         </ul><!-- 导航栏右侧end -->

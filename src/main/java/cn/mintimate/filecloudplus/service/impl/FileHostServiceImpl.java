@@ -2,12 +2,11 @@ package cn.mintimate.filecloudplus.service.impl;
 
 import cn.mintimate.filecloudplus.entity.FileHost;
 import cn.mintimate.filecloudplus.dao.FileHostMapper;
-import cn.mintimate.filecloudplus.entity.ImageHost;
 import cn.mintimate.filecloudplus.service.FileHostService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ import java.util.List;
  */
 @Service
 public class FileHostServiceImpl extends ServiceImpl<FileHostMapper, FileHost> implements FileHostService {
-    @Autowired
+    @Resource
     FileHostMapper mapper;
 
     // 一页展示几个文件
@@ -51,13 +50,13 @@ public class FileHostServiceImpl extends ServiceImpl<FileHostMapper, FileHost> i
     }
 
     @Override
-    public List<ImageHost> FindFiles(int page, String file_type) {
+    public List<FileHost> FindFiles(int page, String file_type) {
         int index = (page - 1) * LIMIT;
         return mapper.selectFileByType(index,LIMIT,file_type);
     }
 
     @Override
-    public List<ImageHost> FindFiles(int page, String file_type, String file_type_detail) {
+    public List<FileHost> FindFiles(int page, String file_type, String file_type_detail) {
         int index = (page - 1) * LIMIT;
         return mapper.selectFileByTypeDetail(index,LIMIT,file_type_detail);
     }

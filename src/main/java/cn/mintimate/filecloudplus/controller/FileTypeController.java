@@ -4,6 +4,7 @@ package cn.mintimate.filecloudplus.controller;
 import cn.mintimate.filecloudplus.entity.FileHost;
 import cn.mintimate.filecloudplus.service.FileHostService;
 import cn.mintimate.filecloudplus.service.FileTypeService;
+import cn.mintimate.filecloudplus.util.base64Encode;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -37,6 +38,7 @@ public class FileTypeController {
     private FileTypeService fileTypeService;
     @Autowired
     private FileHostService fileHostService;
+    private List <FileHost> list=null;
 
     @RequestMapping
     public String select(Model model, @RequestParam(value = "type", required = false) String type, @RequestParam(value = "page", required = false) String page,
@@ -49,47 +51,48 @@ public class FileTypeController {
             type = "Others";
         }
         model.addAttribute("type", type);
+        // 二级分类
+        List <String> detailTypeList=null;
+        detailTypeList=fileTypeService.getDetailByType(type);
+        model.addAttribute("filetype",detailTypeList);
+        // 二级分类具体内容
         model.addAttribute("detailType", detailType);
-        List<String> magiskList = new ArrayList<>();
-        magiskList.add("app");
-        magiskList.add("installer");
-        magiskList.add("uninstaller");
-        magiskList.add("stub");
-        List<String> mcList = new ArrayList<>();
-        mcList.add("Official");
-        mcList.add("Spigot");
-        mcList.add("Forge");
 
         HttpSession session = req.getSession();
         session.setAttribute("dataPrePage", 8);
         session.setAttribute("currentPage", page);
 
-        switch (type) {
-            case "Magisk":
-                session.setAttribute("pages", fileHostService.getPages("Magisk"));
-                model.addAttribute("filetype", magiskList);
-                model.addAttribute("fileList", fileHostService.FindFiles(Integer.parseInt(page), type));
-                return "fh/fileByType";
-            case "Minecraft":
-                session.setAttribute("pages", fileHostService.getPages("Minecraft"));
-                model.addAttribute("filetype", mcList);
-                model.addAttribute("fileList", fileHostService.FindFiles(Integer.parseInt(page), type));
-                return "fh/fileByType";
+        if(fileTypeService.getType().contains(type)){
+            session.setAttribute("pages", fileHostService.getPages(type));
+            list=fileHostService.FindFiles(Integer.parseInt(page), type);
+            list.forEach(item -> {
+                String temp= String.valueOf(item.getId());
+                temp= base64Encode.convertToBase64(temp);
+                item.setId(temp);
+            });
+            model.addAttribute("fileList", list);
+            return "fh/fileByType";
         }
 
         if (detailType != null) {
             session.setAttribute("pages", fileHostService.getPages(null, detailType));
-            model.addAttribute("fileList", fileHostService.FindFiles(Integer.parseInt(page), type, detailType));
-            if (mcList.contains(detailType)) {
-                model.addAttribute("filetype", mcList);
-            }
-            if (magiskList.contains(detailType)) {
-                model.addAttribute("filetype", magiskList);
-            }
+            list= fileHostService.FindFiles(Integer.parseInt(page), type, detailType);
+            list.forEach(item -> {
+                String temp= String.valueOf(item.getId());
+                temp= base64Encode.convertToBase64(temp);
+                item.setId(temp);
+            });
+            model.addAttribute("fileList",list);
             return "fh/fileByType";
         }
         session.setAttribute("pages", fileHostService.getPages(type));
-        model.addAttribute("fileList", fileHostService.FindFiles(Integer.parseInt(page), type));
+        list=fileHostService.FindFiles(Integer.parseInt(page), type);
+        list.forEach(item -> {
+            String temp= String.valueOf(item.getId());
+            temp= base64Encode.convertToBase64(temp);
+            item.setId(temp);
+        });
+        model.addAttribute("fileList", list);
         return "fh/fileByName";
     }
 

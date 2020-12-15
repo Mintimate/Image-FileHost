@@ -17,7 +17,7 @@ import java.util.List;
 public interface FileHostService extends IService<FileHost> {
     int getPages(String file_type);
     int getPages(String file_type,String file_type_detail);
-    List<ImageHost> FindFiles(int page, String file_type);
-    List<ImageHost> FindFiles(int page,String file_type,String file_type_detail);
+    List<FileHost> FindFiles(int page, String file_type);
+    List<FileHost> FindFiles(int page,String file_type,String file_type_detail);
 
 }

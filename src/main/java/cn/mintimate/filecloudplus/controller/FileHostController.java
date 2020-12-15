@@ -6,6 +6,7 @@ import cn.mintimate.filecloudplus.entity.ImageHost;
 import cn.mintimate.filecloudplus.entity.UserIp;
 import cn.mintimate.filecloudplus.service.FileHostService;
 import cn.mintimate.filecloudplus.service.UserIpService;
+import cn.mintimate.filecloudplus.util.base64Encode;
 import cn.mintimate.filecloudplus.util.getUserIP;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,7 @@ public class FileHostController {
 
     @GetMapping(value = "/download/{id}")
     public void download(@PathVariable(value = "id", required = false) String id, HttpServletResponse response, HttpServletRequest request) {
+        id= base64Encode.reverseBase64(id);
         try {
             File file = new File(System.getProperty("user.dir")+"/file"+fileHostService.getById(id).getPath());
             // 穿件输入对象
@@ -127,6 +129,7 @@ public class FileHostController {
     @GetMapping(value = "/delete/{id}")
     @ResponseBody
     public String delete(@PathVariable(value = "id", required = false) String id){
+        id=base64Encode.reverseBase64(id);
         File file = new File(System.getProperty("user.dir")+"/file"+fileHostService.getById(id).getPath());
         if(file.exists()){
             //如果文件存在，则在数据库内逻辑删除

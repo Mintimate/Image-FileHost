@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,18 +26,22 @@ public class UserAdmin implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    private String id;
+
+    private String userEmail;
 
     private String username;
 
     private String password;
 
+    private int userRole;
+
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createDate;
+    private Date createDate;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateDate;
+    private Date updateDate;
 
 
 }

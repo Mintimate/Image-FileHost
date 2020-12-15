@@ -14,13 +14,24 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
             crossorigin="anonymous"></script>
-    <script src="https://cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"
             integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
             crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <script src="https://libs.cdnjs.net/flat-ui/2.3.0/js/flat-ui.min.js"></script>
     <script src="/js/myClickTool.js"></script>
+    <script>
+        $(function () {
+            $('#myTabs a').click(function (e) {
+
+                $(this).tab('show')
+            });
+        }),
+            $(document).ready(function () {
+                bsCustomFileInput.init()
+            })
+    </script>
+    <title>图床页面</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top text-center">
@@ -41,7 +52,7 @@
                 <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item ml-3">
-                <a class="nav-link" href="/imageType" >
+                <a class="nav-link" href="/imageType">
                     图床
                 </a>
             </li>
@@ -86,58 +97,89 @@
     </div>
 </nav>
 <!--content-->
-<div class="container mt-5 pt-5">
-    <div class="row thumbnail">
-        <div class="col-sm-12 text-center">
-            <h3 style="font-family: Handwriting"><span class="align-bottom">用户登录</span><span class="align-bottom" style="font-size: large;">User Login </span></h3>
-        </div>
+<div class="container pt-5 mt-5 mb-5 pb-5 ">
+    <div class="row thumbnail center col-sm-12">
         <div class="row">
-            <div class="col-sm-6">
-                <form class="form-horizontal caption" action="/userAdmin/enter" method="post">
-                    <div class="form-group">
-                        <label for="username" class="col-sm-3 control-label">用户名</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" name="username" id="username" placeholder="用户名">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="password" class="col-sm-3 control-label">密码</label>
-                        <div class="col-sm-8">
-                            <input type="password" class="form-control" name="password" id="password" placeholder="密码">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-9">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox">记住我
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-5">
-                            <button type="submit" class="btn btn-success btn-block">登录</button>
-                        </div>
-                    </div>
-                </form>
+            <div class="col-lg-1 col-3">
+                <img class="img-circle img-rounded  pt-3" th:src="@{'https://v1.alapi.cn/api/avatar?size=100&email='+${#httpServletRequest.getSession().getAttribute('sessionEmail')}}"/>
             </div>
-            <div class="col-sm-6">
-                <div class="caption">
-                    <h3 style="font-family: Handwriting">免责声明</h3>
-                    <p>使用本网站服务，均为公益服务；如果因为自己操作，而导致不可预知结果，本站不承担任何后果。(当然，如果出现问题，想咨询可以联系我)</p>
-                    <a href="/support" class="btn btn-embossed text-center">
-                        <span style="color: palevioletred;">不知道怎么联系我?点此查看</span>
-                    </a>
-                    <a href="/userAdmin/register" class="btn btn-embossed text-center">
-                        <span style="color: palevioletred;">没有账号?点此注册普通用户</span>
-                    </a>
-                </div>
-
+            <div class="col-lg-5 col-3 pl-lg-5 align-self-end">
+                <span th:text="${#httpServletRequest.getSession().getAttribute('sessionUser')}" class="row">Mintimate</span>
+                <span class="row btn btn-xs bg-dark" style="color: floralwhite;">会员</span>
+            </div>
+            <div class="col-lg-6  text-center align-self-center pt-1">
+                <p class=" alert alert-danger" style="font-size: small;">
+                    <strong>Tips：</strong> 想更换账号？
+                </p>
+                <a class="btn btn btn-embossed quit" href="/userAdmin/logout">
+                    点此退出账号
+                </a>
+            </div>
+            <div th:if="${status}=='success'" class="col-lg-12 text-center  pb-1">
+                <p class=" alert alert-success" style="font-size: smaller;">文件上传成功</p>
+            </div>
+            <div th:if="${status}=='error'" class="col-lg-12 text-center  pt-2 pb-1">
+                <p class=" alert alert-success" style="font-size: smaller;">文件上传成功</p>
+            </div>
+            <div th:if="${status}==null" class=" col-lg-12 pb-4">
             </div>
         </div>
 
+        <ul class="nav nav-tabs " id="myTabs">
+            <li><a class="nav-link nav-item active" href="#userHome" data-toggle="tab">图片上传</a></li>
+            <li><a class="nav-link nav-item" href="#userHome" data-toggle="tab">更多功能请联系管理员</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="userHome">
+                <div class="text-center row">
+                    <div class="col-12 text-center">
+                        <h5>上传到图床</h5>
+                    </div>
+                    <div class="col-12 ">
+
+                        <table class="table table-hover table-light text-center">
+                            <thead>
+                            <tr>
+                                <th>选择类别</th>
+                                <th>选择图片</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <form action="/imageHost/upload" enctype="multipart/form-data" method="post">
+                                <tr>
+                                    <td>
+                                        <!-- 图片分类选项-->
+                                        <select name="imageType" class="custom-select">
+                                            <span th:each="type:${imageTypes}">
+                                            <option th:value="${type.getImageType()}" th:text="${type.getImageType()}">
+                                            </option>
+                                            </span>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="customFileLang" name="file"
+                                                   lang="es">
+                                            <label class="custom-file-label" for="customFileLang">点击选择图片</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="submit" class="btn btn-danger btn-block">上传</button>
+                                    </td>
+                                </tr>
+                            </form>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 </body>
 </html>
