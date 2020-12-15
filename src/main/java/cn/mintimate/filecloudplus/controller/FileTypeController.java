@@ -51,17 +51,18 @@ public class FileTypeController {
             type = "Others";
         }
         model.addAttribute("type", type);
-        // 二级分类
+        // 二级分类查询
         List <String> detailTypeList=null;
         detailTypeList=fileTypeService.getDetailByType(type);
         model.addAttribute("filetype",detailTypeList);
-        // 二级分类具体内容
+        // 二级分类具体内容通过session给前端交互
         model.addAttribute("detailType", detailType);
 
         HttpSession session = req.getSession();
         session.setAttribute("dataPrePage", 8);
         session.setAttribute("currentPage", page);
 
+        // 判断分类（是否为Magisk、Minecraft分类）
         if(fileTypeService.getType().contains(type)){
             session.setAttribute("pages", fileHostService.getPages(type));
             list=fileHostService.FindFiles(Integer.parseInt(page), type);
@@ -103,25 +104,21 @@ public class FileTypeController {
         if (type == null) {
             type = "Others";
         }
-        List<String> magiskList = new ArrayList<>();
-        magiskList.add("app");
-        magiskList.add("installer");
-        magiskList.add("uninstaller");
-        magiskList.add("stub");
-        List<String> mcList = new ArrayList<>();
-        mcList.add("Official");
-        mcList.add("Spigot");
-        mcList.add("Forge");
+        // 二级分类查询
+        List <String> detailTypeList=null;
+        detailTypeList=fileTypeService.getDetailByType(type);
+        // 文件总大小
         double fileSizeTotal=0.00;
+        // 文件下载次数统计
         int fileDownloadTotal;
         QueryWrapper wrapper = new QueryWrapper();
         if(detailType!=null){
             wrapper.eq("file_Type_Detail", detailType);
-            if (mcList.contains(detailType)) {
-                model.addAttribute("filetype", mcList);
+            if (detailTypeList.contains(detailType)) {
+                model.addAttribute("filetype", detailTypeList);
             }
-            if (magiskList.contains(detailType)) {
-                model.addAttribute("filetype", magiskList);
+            if (detailTypeList.contains(detailType)) {
+                model.addAttribute("filetype", detailTypeList);
             }
         }
         else {
@@ -129,10 +126,10 @@ public class FileTypeController {
         }
         switch (type) {
             case "Magisk":
-                model.addAttribute("filetype", magiskList);
+                model.addAttribute("filetype", detailTypeList);
                 break;
             case "Minecraft":
-                model.addAttribute("filetype", mcList);
+                model.addAttribute("filetype", detailTypeList);
                 break;
         }
         List <FileHost> fileList=fileHostService.list(wrapper);

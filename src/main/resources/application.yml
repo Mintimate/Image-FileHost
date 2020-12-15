@@ -9,7 +9,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/filecloudplus?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: filecloud
-    password: youselect
+    password: 20000215
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
