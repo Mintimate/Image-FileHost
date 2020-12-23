@@ -20,5 +20,10 @@ public class UserIpController {
     public String support(){
         return "sundry/support";
     }
+
+    @RequestMapping("/test")
+    public String tips(){
+        return "sundry/tips";
+    }
 }
 

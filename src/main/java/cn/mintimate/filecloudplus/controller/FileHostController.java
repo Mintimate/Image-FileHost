@@ -95,9 +95,10 @@ public class FileHostController {
             // 穿件输入对象
             FileInputStream fis = new FileInputStream(file);
             // 设置相关格式
-            response.setContentType("application/force-download");
+            response.setContentLengthLong((long) Math.ceil(fileHostService.getById(id).getFileSize()));
+            response.setContentType("application/octet-stream");
             // 设置下载后的文件名以及header
-            response.addHeader("Content-disposition", "attachment;fileName=" + fileHostService.getById(id).getFileName());
+            response.setHeader("Content-disposition", "attachment;fileName=" + new String(fileHostService.getById(id).getFileName().getBytes("UTF-8"),"iso-8859-1"));
             // 创建输出对象
             OutputStream os = response.getOutputStream();
             // 常规操作
@@ -116,7 +117,7 @@ public class FileHostController {
             //记录IP
             UserIp userIp=new UserIp();
             userIp.setTargetClassify(fileHost.getFileType()+"-"+fileHost.getFileTypeDetail());
-            userIp.setTargetId(Long.valueOf(Integer.valueOf(id)));
+            userIp.setTargetId(id);
             userIp.setUserIp(getUserIP.getIpAddr(request));
             userIpService.save(userIp);
         } catch (FileNotFoundException e) {

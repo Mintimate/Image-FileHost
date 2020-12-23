@@ -46,7 +46,7 @@ public class FileTypeController {
         if (page == null) {
             page = "1";
         }
-        // 一级分类
+        // 一级分类判断
         if (type == null) {
             type = "Others";
         }
@@ -61,22 +61,15 @@ public class FileTypeController {
         HttpSession session = req.getSession();
         session.setAttribute("dataPrePage", 8);
         session.setAttribute("currentPage", page);
-
-        // 判断分类（是否为Magisk、Minecraft分类）
-        if(fileTypeService.getType().contains(type)){
+        // 判断总页数，detailType为细则分类
+        if(detailType != null && !detailType.equals("") ){
+            session.setAttribute("pages", fileHostService.getPages(null, detailType));
+        }
+        else {
             session.setAttribute("pages", fileHostService.getPages(type));
-            list=fileHostService.FindFiles(Integer.parseInt(page), type);
-            list.forEach(item -> {
-                String temp= String.valueOf(item.getId());
-                temp= base64Encode.convertToBase64(temp);
-                item.setId(temp);
-            });
-            model.addAttribute("fileList", list);
-            return "fh/fileByType";
         }
 
-        if (detailType != null) {
-            session.setAttribute("pages", fileHostService.getPages(null, detailType));
+        if (detailType != null && !detailType.equals("")) {
             list= fileHostService.FindFiles(Integer.parseInt(page), type, detailType);
             list.forEach(item -> {
                 String temp= String.valueOf(item.getId());
@@ -86,7 +79,6 @@ public class FileTypeController {
             model.addAttribute("fileList",list);
             return "fh/fileByType";
         }
-        session.setAttribute("pages", fileHostService.getPages(type));
         list=fileHostService.FindFiles(Integer.parseInt(page), type);
         list.forEach(item -> {
             String temp= String.valueOf(item.getId());
@@ -94,6 +86,9 @@ public class FileTypeController {
             item.setId(temp);
         });
         model.addAttribute("fileList", list);
+        if(!type.equals("Others")){
+            return "fh/fileByType";
+        }
         return "fh/fileByName";
     }
 
@@ -114,24 +109,16 @@ public class FileTypeController {
         QueryWrapper wrapper = new QueryWrapper();
         if(detailType!=null){
             wrapper.eq("file_Type_Detail", detailType);
-            if (detailTypeList.contains(detailType)) {
-                model.addAttribute("filetype", detailTypeList);
-            }
-            if (detailTypeList.contains(detailType)) {
-                model.addAttribute("filetype", detailTypeList);
-            }
+            wrapper.eq("file_type",type);
         }
         else {
             wrapper.eq("file_Type", type);
         }
-        switch (type) {
-            case "Magisk":
-                model.addAttribute("filetype", detailTypeList);
-                break;
-            case "Minecraft":
-                model.addAttribute("filetype", detailTypeList);
-                break;
+
+        if(fileTypeService.getType().contains(type)){
+            model.addAttribute("filetype", detailTypeList);
         }
+
         List <FileHost> fileList=fileHostService.list(wrapper);
         fileDownloadTotal = fileList.stream().collect(Collectors.summingInt(FileHost::getDownloadCount));
         for (FileHost temp : fileList) {
@@ -151,8 +138,19 @@ public class FileTypeController {
         wrapper.eq("file_Type","Homebrew");
         List<FileHost> list=fileHostService.list(wrapper);
         int fileDownloadTotal=0;
+        // 卸载和安装共计调用次数
         fileDownloadTotal = list.stream().collect(Collectors.summingInt(FileHost::getDownloadCount));
-        model.addAttribute("fileList",fileHostService.list(wrapper));
+        for (FileHost host:
+             list) {
+            if(host.getFileTypeDetail().equals("install")){
+                model.addAttribute("Install",host);
+                model.addAttribute("installID",base64Encode.convertToBase64(host.getId()));
+            }
+            else {
+                model.addAttribute("Uninstall",host);
+                model.addAttribute("uninstallID",base64Encode.convertToBase64(host.getId()));
+            }
+        }
         model.addAttribute("fileDownloadTotal", fileDownloadTotal);
         return "sundry/homebrew";
     }

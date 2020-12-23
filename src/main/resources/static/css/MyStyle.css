@@ -1,5 +1,5 @@
 html{
-    background-image: url("../img/bg/ff470001e0c0f0953490.png");
+    background-image: url("../img/bg/ff470001e0c0f0953490.jpg");
     background-repeat: no-repeat;
     background-size:cover;
     background-attachment:fixed;;
@@ -8,11 +8,11 @@ html{
 
 body{
    /*background-image: url(https://pic.downk.cc/item/5ebe9ad5c2a9a83be5dfc864.png);*/
-    background-image: url("../img/bg/ff470001e0c0f0953490.png");
+    background-image: url("../img/bg/ff470001e0c0f0953490.jpg");
     background-repeat: no-repeat;
     background-size:cover;
     background-attachment:fixed;;
-	opacity: 0.85;
+	opacity: 0.95;
 }
 footer{
 	opacity: 0.6;

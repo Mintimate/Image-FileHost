@@ -25,19 +25,23 @@ public class ImageHost implements Serializable {
     @TableId(value = "id",type = IdType.ASSIGN_ID)
     private String id;
 
+    private String imageType;
+
     private String imageName;
+
+    private Integer downloadCount;
+
+    private String path;
+
+    private String thumbnailPath;
+
+    private double fileSize;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createDate;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateDate;
-
-    private Integer downloadCount;
-
-    private String path;
-
-    private String imageType;
 
     private String uploadUser;
 

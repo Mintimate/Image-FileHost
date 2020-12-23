@@ -1,15 +1,15 @@
 spring:
   mail:
     host: smtp.qiye.aliyun.com
-    username: noreply@mintimate.cn
-    password: Noreply2000
+    username:
+    password:
   resources:
     static-locations: classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, classpath:/public/, file:${upload.dir}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/filecloudplus?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: filecloud
-    password: 20000215
+    username:
+    password:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html

@@ -166,13 +166,13 @@
         <div th:each="img:${imageHost}" class="col-md-6 col-lg-3">
             <div class="thumbnail">
                 <a th:href="@{/imageHost/imageDetail/{id}(id=${img.getId()})}">
-                    <img style="height: 164px; width: auto; display: block;" alt="100%x200" th:src="${img.getPath()}">
+                    <img style="height: 164px; width: auto; display: block;" alt="100%x200" th:src="${img.getThumbnailPath()}">
                 </a>
                 <div class="caption center">
                     <h3 th:text="${img.getDownloadCount()}" class="text-center"></h3>
                     <h6 class="text-center">下载&浏览量</h6>
                     <p><a class="btn btn-primary btn-block" role="button"
-                          th:href="${img.getPath()}">图床链接</a></p>
+                          th:href="@{/imageHost/getImage/{id}(id=${img.getId()})}">图床链接</a></p>
                 </div>
             </div>
         </div>

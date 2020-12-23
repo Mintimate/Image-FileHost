@@ -80,24 +80,34 @@ public class UserAdminController {
 
     // 注册信息验证
     @PostMapping("/register")
-    @ResponseBody
     public String Register(@RequestParam(value = "userEmail") String email,
                            @RequestParam(value = "username") String username,
                            @RequestParam(value = "password") String password,
                            @RequestParam(value = "code") String code ,
-                           HttpServletRequest req ){
+                           HttpServletRequest req,
+                           Model model){
         HttpSession session=req.getSession();
-        if(!code.equals(session.getAttribute("sessionCode"))){
-            return "验证码不一样";
-        }
-        if(!adminService.findUser(username,email)){
-            return "用户名或邮箱已经被使用";
-        }
         userAdmin.setUserEmail(email);
         userAdmin.setUsername(username);
         userAdmin.setPassword(password);
-        adminService.save(userAdmin);
-        return "Success";
+        if(!code.equals(session.getAttribute("sessionCode"))){
+            model.addAttribute("status","Error");
+            model.addAttribute("tips","验证密码不一致");
+        }
+        else if(!adminService.findUser(username,email)){
+            model.addAttribute("status","Error");
+            model.addAttribute("tips","用户名或邮箱已经被使用");
+        }
+        else {
+            model.addAttribute("status","Success");
+            model.addAttribute("tips","注册成功，请返回登录界面登录");
+            adminService.save(userAdmin);
+        }
+        model.addAttribute("span01","返回登录");
+        model.addAttribute("a01","/userAdmin/login");
+        model.addAttribute("span02","返回主页");
+        model.addAttribute("a02","/");
+        return "sundry/tips";
     }
 
     // 获取验证码

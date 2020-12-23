@@ -97,6 +97,12 @@ public class ImageTypeController {
         return "manager/admin";
     }
 
+    @CrossOrigin
+    @GetMapping("/getType")
+    @ResponseBody
+    public List Type(){
+        return imageTypeService.list();
+    }
 
 //    @GetMapping("/typeByPaper")
 //    public String imageTypePaper(Model model, @RequestParam(required = false, value = "type") String type, @RequestParam(required = false, value = "page") String page, HttpServletRequest req) {

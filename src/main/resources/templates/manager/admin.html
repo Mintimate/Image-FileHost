@@ -19,6 +19,7 @@
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <script src="https://libs.cdnjs.net/flat-ui/2.3.0/js/flat-ui.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
     <script src="/js/myClickTool.js"></script>
     <script>
         $(function () {
@@ -153,11 +154,31 @@
                                 <tr>
                                     <td>
                                         <!-- 图片分类选项-->
-                                        <select name="imageType" class="custom-select">
-                                            <span th:each="type:${imageTypes}">
-                                            <option th:value="${type.getImageType()}" th:text="${type.getImageType()}">
-                                            </option>
-                                            </span>
+                                        <select name="imageType" id="select" class="custom-select">
+<!--                                            <span th:each="type:${imageTypes}">-->
+<!--                                            <option th:value="${type.getImageType()}" th:text="${type.getImageType()}">-->
+<!--                                            </option>-->
+<!--                                            </span>-->
+                                            <script>
+                                                $(function(){
+                                                    $.ajax({
+                                                        url: "/imageType/getType", //json文件位置
+                                                        type: "GET", //请求方式为get
+                                                        dataType: "json", //返回数据格式为json
+                                                        success: function(data) {
+                                                            $("#select").append("<option value='Other'>Other</option>");
+                                                            console.log(data);
+                                                            for(i=0;i<data.length;i++){
+                                                                var data1 = data[i];
+                                                                $("#select").append("<option value='"+data1.imageType+"'>"+data1.imageType+"</option>");
+                                                            }
+
+                                                        }
+                                                    })
+
+                                                });
+                                            </script>
+
                                         </select>
                                     </td>
                                     <td>
