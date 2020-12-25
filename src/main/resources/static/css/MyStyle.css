@@ -1,3 +1,25 @@
+/*@media (prefers-color-scheme: dark) {*/
+/*    :root {*/
+/*        --accent: #3493d1;*/
+/*        --main: #f3f3f3;*/
+/*        --light: #ececec;*/
+/*        --lighter: #666666;*/
+/*        --border: #e6e6e6;*/
+/*        --bg: #333333;*/
+/*    }*/
+/*    #card{*/
+/*        background-color: #203b4e !important;;*/
+/*        color: white;*/
+/*    }*/
+/*    html{*/
+/*        background-image: none;*/
+/*        background-color: #235377;*/
+/*    }*/
+/*    body{*/
+/*        background-image: none;*/
+/*        background-color: #235377 !important;;*/
+/*    }*/
+/*}*/
 html{
     background-image: url("../img/bg/ff470001e0c0f0953490.jpg");
     background-repeat: no-repeat;

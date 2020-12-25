@@ -1,4 +1,7 @@
 ![](introduction.png)
+![](https://img.shields.io/badge/Springboot-2.3.4-green)
+![](https://img.shields.io/badge/Mybatis%20Plus-3.4.0-green)
+<a href="https://www.afdian.net/@mintimate/plan"><img src="https://gitee.com/mintimate/ImageHost/raw/master/Donate/aifadian.svg"/></a>
 # 项目概述
 这个其实就是我上个 [图床项目](https://github.com/Mintimate/ImageHost) 的升级架构版本，也不是什么大工程，就是:`原来有人吐槽和嘲讽原来项目架构不是很好，吐槽JSP效率过低。于是我就升级了一下架构。`区别：
 - 原项目基于JSP，本项目基于`Springboot`、`Mybatis Plus`和`Thymeleaf`

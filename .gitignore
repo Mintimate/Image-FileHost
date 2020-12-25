@@ -34,3 +34,4 @@ build/
 
 ### 个人文件 ###
 file
+src/main/resources/application.yml
