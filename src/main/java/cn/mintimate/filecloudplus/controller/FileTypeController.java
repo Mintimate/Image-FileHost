@@ -8,12 +8,9 @@ import cn.mintimate.filecloudplus.util.base64Encode;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -153,6 +150,15 @@ public class FileTypeController {
         }
         model.addAttribute("fileDownloadTotal", fileDownloadTotal);
         return "sundry/homebrew";
+    }
+
+    @CrossOrigin
+    @GetMapping("/fileTypeDetail/{fileType}")
+    @ResponseBody
+    public List<String> getFileTypeDetail(@PathVariable(value = "fileType") String fileType){
+        List fileTypeDetial=fileTypeService.getDetailByType(fileType);
+        System.out.println(fileTypeDetial.toString());
+        return fileTypeDetial;
     }
 
 }

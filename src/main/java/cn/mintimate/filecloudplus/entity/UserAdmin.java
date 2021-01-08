@@ -33,6 +33,8 @@ public class UserAdmin implements Serializable {
 
     private String username;
 
+    private String avatarPath;
+
     private String password;
 
     private int userRole;

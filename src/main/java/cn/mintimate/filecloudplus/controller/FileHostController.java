@@ -9,6 +9,7 @@ import cn.mintimate.filecloudplus.service.UserIpService;
 import cn.mintimate.filecloudplus.util.base64Encode;
 import cn.mintimate.filecloudplus.util.getUserIP;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,25 +38,26 @@ public class FileHostController {
     @Autowired
     private UserIpService userIpService;
 
-    @RequestMapping("/upload")
-    public String upload(@RequestParam("file") MultipartFile file, @RequestParam(value = "fileType",required = false) String fileType,
-                         @RequestParam(value = "fileTypeDetail",required = false) String fileTypeDetail, Model model,
-                         HttpServletRequest request){
-        FileHost fileHost=new FileHost();
+    @CrossOrigin
+    @PostMapping("/uploadFile")
+    @ResponseBody
+    public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(value = "fileType") String fileType,
+                             @RequestParam(value = "fileTypeDetail") String fileTypeDetail,
+                             @RequestParam("theUserName") String username){
         // 判断具体分类
         if(fileType==null){
             fileType="Others";
         }
+        FileHost fileHost=new FileHost();
         // 获取原始名字
         String fileName = file.getOriginalFilename();
         fileHost.setFileName(fileName);
+        fileHost.setId(String.valueOf(IdWorker.getId()));
         fileHost.setFileType(fileType);
         fileHost.setFileTypeDetail(fileTypeDetail);
         // 获取文件大小
         double fileSize=file.getSize();
         fileHost.setFileSize(fileSize);
-        // 获取后缀名
-        // String suffixName = fileName.substring(fileName.lastIndexOf("."));
         // 文件保存路径
         String filePathSql=null;
         if(fileTypeDetail!=null) {
@@ -65,7 +67,7 @@ public class FileHostController {
             filePathSql = "/fileHostFile/" + fileType  + "/" + UUID.randomUUID() + "-" + fileName;
         }
         fileHost.setPath(filePathSql);
-        fileHost.setUploadUser(String.valueOf(request.getSession().getAttribute("sessionUser")));
+        fileHost.setUploadUser(username);
         // 文件重命名，防止重复
         fileName = System.getProperty("user.dir")+"/file" + filePathSql;
         // 文件对象
@@ -78,13 +80,10 @@ public class FileHostController {
             // 保存到服务器中
             file.transferTo(dest);
             fileHostService.save(fileHost);
-            model.addAttribute("status","success");
-            return "manager/admin";
         } catch (Exception e) {
             e.printStackTrace();
         }
-        model.addAttribute("status","error");
-        return "manager/admin";
+        return "200";
     }
 
     @GetMapping(value = "/download/{id}")

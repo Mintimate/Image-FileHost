@@ -2,71 +2,20 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/MyStyle.css"/>
-        <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link href="https://libs.cdnjs.net/flat-ui/2.3.0/css/flat-ui.min.css" rel="stylesheet"/>
-    <link rel="icon" type="image/png" href="/img/icon/favicon.svg"/>
-    <title>Designed By Mintimate</title>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"
-            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-            crossorigin="anonymous"></script>
-    <script src="https://libs.cdnjs.net/flat-ui/2.3.0/js/flat-ui.min.js"></script>
+    <!--    自定义css-->
+    <link rel="stylesheet" href="/css/MyStyle.css" />
+    <!--    自定义js-->
     <script src="/js/myClickTool.js"></script>
-    <style>
-        .row {
-            margin-top: 20px;;
-        }
-
-        .center {
-            text-align: center;
-        }
-
-        .pagination {
-            background: #cccccc;
-        }
-    </style>
-    <script type="text/javascript">
-            $(function () {
-                $("#next").click(function () {
-                    var pages = parseInt($("#pages").html());
-                    var page = parseInt($("#currentPage").html());
-                    if (page == pages) {
-                        return;
-                    }
-                    page++;
-                    location.href = "/imageType/typeByPaper?type=Wallpaper&page=" + page;
-                })
-
-                $("#previous").click(function () {
-                    var page = parseInt($("#currentPage").html());
-                    if (page == 1) {
-                        return;
-                    }
-                    page--;
-                    location.href = "/imageType/typeByPaper?type=Wallpaper&page=" + page;
-                })
-
-                $("#first").click(function () {
-                    location.href = "/imageType/typeByPaper?type=Wallpaper&page=1";
-                })
-
-                $("#last").click(function () {
-                    var pages = parseInt($("#pages").html());
-                    location.href = "/imageType/typeByPaper?type=Wallpaper&page=" + pages;
-                })
-            })
-        $(function () {
-            $('#myTabs a').click(function (e) {
-                $(this).tab('show')
-            });
-        })
-    </script>
+    <!--    JQ-->
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+    <!--    bootstrap套件-->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <link href="https://libs.cdnjs.net/flat-ui/2.3.0/css/flat-ui.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="/img/icon/favicon.svg" />
+    <title>Designed By Mintimate</title>
+    crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top text-center">
@@ -82,17 +31,17 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav mr-lg-auto">
             <li class="nav-item">
                 <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item ml-3 active">
+            <li class="nav-item ml-lg-3 active">
                 <a class="nav-link" href="/imageType" >
                     图床
                 </a>
             </li>
             <!--Homebrew-->
-            <li class="nav-item dropdown ml-3">
+            <li class="nav-item dropdown ml-lg-3">
                 <a class="nav-link dropdown-toggle" href="#" id="fileHost" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     文件中转站
@@ -104,7 +53,7 @@
                     <a class="dropdown-item text-light" href="/fileType">中转站</a>
                 </div>
             </li>
-            <li class="nav-item dropdown ml-3">
+            <li class="nav-item dropdown ml-lg-3">
                 <a class="nav-link dropdown-toggle" href="#" id="infoDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     数据中心
@@ -118,14 +67,14 @@
             </li>
         </ul>
         <!-- 导航栏右侧 -->
-        <ul class="navbar-nav">
-            <li class="nav-item ml-xl-3 align-content-center">
+        <ul class="navbar-nav ml-lg-auto">
+            <li class="nav-item ml-lg-3 align-content-center">
                 <a href="/support" class="nav-link">创作支持</a>
             </li>
-            <li class="nav-item ml-xl-3">
+            <li class="nav-item ml-lg-3">
                 <a th:if="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/login" class="nav-link ">登录</a>
                 <div th:unless="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/admin" onclick="goToAdmin()" class="border bg-light text-dark btn">
-                    <img class="rounded-circle" style=" height:1.9rem;" th:src="@{'https://v1.alapi.cn/api/avatar?size=100&email='+${#httpServletRequest.getSession().getAttribute('sessionEmail')}}"> <span th:text="${#httpServletRequest.getSession().getAttribute('sessionUser')}" class="align-text-top" style="padding-left: 0.625rem;">Mintimate</span>
+                    <img class="rounded-circle" style=" height:1.9rem;" th:src="@{'/userAdmin/getAvatar/'+${#httpServletRequest.getSession().getAttribute('sessionEmail')}}"> <span th:text="${#httpServletRequest.getSession().getAttribute('sessionUser')}" class="align-text-top" style="padding-left: 0.625rem;">Mintimate</span>
                 </div>
             </li>
         </ul><!-- 导航栏右侧end -->
@@ -133,7 +82,7 @@
 </nav>
 <!--content-->
 <!--内容部分-->
-<div class="container-lg pt-5 pb-5 mt-5 ">
+<div class="container-lg pt-5 pb-5">
     <div class="row bg-light">
         <div class="col-sm-12 text-center">
             <h3 style="font-family: Handwriting"><span class="align-bottom">图片控制台:</span><span class="align-bottom"

@@ -21,7 +21,7 @@
 /*    }*/
 /*}*/
 html{
-    background-image: url("../img/bg/ff470001e0c0f0953490.jpg");
+    background-image: url("../img/bg/bgi.webp");
     background-repeat: no-repeat;
     background-size:cover;
     background-attachment:fixed;;
@@ -30,7 +30,7 @@ html{
 
 body{
    /*background-image: url(https://pic.downk.cc/item/5ebe9ad5c2a9a83be5dfc864.png);*/
-    background-image: url("../img/bg/ff470001e0c0f0953490.jpg");
+    background-image: url("../img/bg/bgi.webp");
     background-repeat: no-repeat;
     background-size:cover;
     background-attachment:fixed;;
@@ -44,4 +44,19 @@ footer{
 @font-face {
 	font-family: Handwriting;
 	src: url('../font/Handwriting.ttf');
+}
+
+.row {
+    margin-top: 20px;;
+}
+
+.center {
+    text-align: center;
+}
+
+.pagination{
+    background: none!important;
+}
+pagination{
+    background: none;
 }

@@ -1,18 +1,27 @@
 package cn.mintimate.filecloudplus.controller;
 
 
+import cn.mintimate.filecloudplus.entity.ImageHost;
 import cn.mintimate.filecloudplus.entity.UserAdmin;
+import cn.mintimate.filecloudplus.entity.UserIp;
 import cn.mintimate.filecloudplus.service.ImageTypeService;
 import cn.mintimate.filecloudplus.service.UserAdminService;
+import cn.mintimate.filecloudplus.util.base64Encode;
+import cn.mintimate.filecloudplus.util.getUserIP;
+import cn.mintimate.filecloudplus.util.saveAvatar;
 import cn.mintimate.filecloudplus.util.sendEmailTool;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,6 +109,7 @@ public class UserAdminController {
         }
         else {
             model.addAttribute("status","Success");
+            userAdmin.setAvatarPath(saveAvatar.saveAvatar(email,username));
             model.addAttribute("tips","注册成功，请返回登录界面登录");
             adminService.save(userAdmin);
         }
@@ -135,9 +145,18 @@ public class UserAdminController {
 
     }
 
-    @RequestMapping("/test")
-    public String test(HttpServletResponse response) {
-        return "manager/login";
+    @GetMapping(value = "/getAvatar/{userEmail}",produces = MediaType.IMAGE_JPEG_VALUE)
+    @ResponseBody
+    public byte[]  getImage(@PathVariable(value = "userEmail", required = false) String userEmail, HttpServletRequest req) throws IOException {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("user_email",userEmail);
+        UserAdmin user=adminService.getOne(wrapper);
+        try (InputStream is = new FileInputStream(System.getProperty("user.dir")+user.getAvatarPath())){
+            byte[] bytes = new byte[is.available()];
+            is.read(bytes, 0, is.available());
+            is.close();
+            return bytes;
+        }
     }
 
 }

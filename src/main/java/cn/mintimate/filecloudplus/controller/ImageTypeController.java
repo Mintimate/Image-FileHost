@@ -12,14 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.lang.reflect.Parameter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -68,33 +64,36 @@ public class ImageTypeController {
             temp=base64Encode.convertToBase64(temp);
             item.setId(temp);
         });
+        if(type == null || type == ""){
+            type=null;
+        }
         model.addAttribute("type", type);
         model.addAttribute("imageHost", list);
         model.addAttribute("imageType", imageTypeService.list());
         return "ih/imageType";
     }
 
-    @RequestMapping("/addType")
-    public String addType(Model model, @RequestParam(value = "newType", required = false) String newType) {
+    @GetMapping(value = "/addType/{newType}")
+    @ResponseBody
+    public String addType(@PathVariable(value = "newType", required = false) String newType) {
         ImageType image = new ImageType();
         image.setImageType(newType);
         imageTypeService.save(image);
-        model.addAttribute("imageTypes", imageTypeService.list());
-        return "manager/admin";
+        return "200";
     }
 
-    @RequestMapping("/RemoveType")
-    public String removeType(Model model, @RequestParam(value = "newType", required = false) String newType) {
+    @GetMapping(value = "/removeType/{oldType}")
+    @ResponseBody
+    public String removeType(@PathVariable(value = "oldType", required = false) String oldType) {
         ImageType image = new ImageType();
-        image.setImageType(newType);
+        image.setImageType(oldType);
         QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("image_Type", newType);
+        wrapper.eq("image_Type", oldType);
         // 在imageType实体表内删除该分类（非逻辑删除）
         imageTypeService.remove(wrapper);
         // 在imageHost实体表内删除该分类下图片（逻辑删除）
         imageHostService.remove(wrapper);
-        model.addAttribute("imageTypes", imageTypeService.list());
-        return "manager/admin";
+        return "200";
     }
 
     @CrossOrigin

@@ -1,7 +1,6 @@
 package cn.mintimate.filecloudplus.controller;
 
 
-import cn.mintimate.filecloudplus.entity.FileHost;
 import cn.mintimate.filecloudplus.entity.ImageHost;
 import cn.mintimate.filecloudplus.entity.UserIp;
 import cn.mintimate.filecloudplus.service.ImageHostService;
@@ -11,7 +10,6 @@ import cn.mintimate.filecloudplus.util.getUserIP;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import net.coobird.thumbnailator.ThumbnailParameter;
-import net.coobird.thumbnailator.Thumbnailator;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,17 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URLEncoder;
-import java.util.UUID;
-
 /**
  * <p>
  *  前端控制器
@@ -48,77 +38,60 @@ public class ImageHostController {
     @Autowired
     private UserIpService userIpService;
 
-
-    public ModelAndView index(){
-        ModelAndView modelAndView=new ModelAndView();
-        modelAndView.setViewName("imageType");
-        System.out.println(imageHostService.list());
-        modelAndView.addObject("list",imageHostService.list());
-        return modelAndView;
-    }
-
-    @RequestMapping("/upload")
-    public String upload(@RequestParam("file") MultipartFile file, @RequestParam(value = "imageType",required = false) String imageType,
-                         Model model, HttpServletRequest request ){
-        ImageHost imageHost = new ImageHost();
-        // 获取原始名字
-        String fileName = file.getOriginalFilename();
-        imageHost.setImageName(fileName);
-        if(imageType==null){
-            imageType="其他";
-        }
+    @CrossOrigin
+    @RequestMapping("/uploadImage")
+    @ResponseBody
+    public String uploadImage(@RequestParam("file") MultipartFile file,@RequestParam(value = "imageType",required = false) String imageType) {
+        ImageHost imageHost=new ImageHost();
+        // 设置图片名字
+        String imageName=file.getOriginalFilename();
+        imageHost.setImageName(imageName);
+        // 设置图片对象类别
         imageHost.setImageType(imageType);
         // 获取图片大小
-        double imageSize=file.getSize();
-        imageHost.setFileSize(imageSize);
+        imageHost.setFileSize(file.getSize());
         // 图片防止重复-提前设置图片雪花ID
         imageHost.setId(String.valueOf(IdWorker.getId(imageHost)));
-        // 重命名图片，以雪花算法重命名
-        String sqlImgName=imageHost.getId()+"-"+ fileName;
+        // 重命名原图片，以雪花算法重命名
+        String newImgName=imageHost.getId()+"-"+ imageName;
         // 原图存储路径
-        String imgPathSql="/imageHostFile/"+imageType+"/"+sqlImgName;
+        String imgPathSql="/imageHostFile/original/"+imageType+"/"+newImgName;
         imageHost.setPath(imgPathSql);
+        // 缩略图重命名
+        newImgName=newImgName.substring(0,imageName.lastIndexOf("."))+".webp";
         // 缩略图存储路径
-        String thumbnailPathPathSql="/imageHostFile/thumbnail/"+imageType+"/"+sqlImgName;
+        String thumbnailPathPathSql="/imageHostFile/thumbnail/"+imageType+"/"+newImgName;
         imageHost.setThumbnailPath(thumbnailPathPathSql);
         // 文件存储地址和名字
-        fileName = System.getProperty("user.dir")+"/file" + imgPathSql;
-        imageHost.setUploadUser(String.valueOf(request.getSession().getAttribute("sessionUser")));
-        // 文件对象
-        File dest = new File(fileName);
+        String originalImagePath = System.getProperty("user.dir")+"/file" + imgPathSql;
+        String thumbnailImagePath= System.getProperty("user.dir")+"/file" + thumbnailPathPathSql;
+        imageHost.setUploadUser("Mintimate");
+        File originalImage = new File(originalImagePath);
+        File thumbnailImage=new File(thumbnailImagePath);
         // 判断路径是否存在，如果不存在则创建
-        if(!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();
+        if (!originalImage.getParentFile().exists()) {
+            originalImage.getParentFile().mkdirs();
         }
         try {
             // 保存到服务器中
-            file.transferTo(dest);
-            File dest1=new File(System.getProperty("user.dir")+"/file"+thumbnailPathPathSql);
-            if(!dest1.getParentFile().exists()){
-                dest1.getParentFile().mkdirs();
-            }
-            Thumbnails.of(fileName).size(328,656)
-                    .imageType(ThumbnailParameter.DEFAULT_IMAGE_TYPE)
-                    .outputQuality(0.75f)
-                    .toFile(System.getProperty("user.dir")+"/file"+thumbnailPathPathSql);
-            imageHostService.save(imageHost);
-            model.addAttribute("status","success");
-            if(request.getSession().getAttribute("userRole").equals(99)) {
-                return "manager/admin";
-            }
-            else {
-                return "manager/consumer";
-            }
+            file.transferTo(originalImage);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        model.addAttribute("status","error");
-        if(request.getSession().getAttribute("userRole").equals(99)) {
-            return "manager/admin";
+        if (!thumbnailImage.getParentFile().exists()) {
+            thumbnailImage.getParentFile().mkdirs();
         }
-        else {
-            return "manager/consumer";
+        try {
+            Thumbnails.of(originalImage).size(328,656)
+                    .imageType(ThumbnailParameter.DEFAULT_IMAGE_TYPE)
+                    .outputQuality(0.85f)
+                    .outputFormat("webp")
+                    .toFile(thumbnailImage);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        imageHostService.save(imageHost);
+        return "200";
     }
 
     @GetMapping(value = "/getImage/{id}",produces = MediaType.IMAGE_JPEG_VALUE)

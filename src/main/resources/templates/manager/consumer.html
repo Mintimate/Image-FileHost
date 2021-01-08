@@ -1,36 +1,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/MyStyle.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-          crossorigin="anonymous"/>
-    <link href="https://libs.cdnjs.net/flat-ui/2.3.0/css/flat-ui.min.css" rel="stylesheet"/>
-    <link rel="icon" type="image/png" href="/img/icon/favicon.svg"/>
-    <title>Designed By Mintimate</title>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"
-            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
-    <script src="https://libs.cdnjs.net/flat-ui/2.3.0/js/flat-ui.min.js"></script>
+    <!--    自定义css-->
+    <link rel="stylesheet" href="/css/MyStyle.css" />
+    <!--    自定义js-->
     <script src="/js/myClickTool.js"></script>
-    <script>
-        $(function () {
-            $('#myTabs a').click(function (e) {
-
-                $(this).tab('show')
-            });
-        }),
-            $(document).ready(function () {
-                bsCustomFileInput.init()
-            })
-    </script>
+    <!--    JQ-->
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+    <!--    bootstrap套件-->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <link href="https://libs.cdnjs.net/flat-ui/2.3.0/css/flat-ui.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="/img/icon/favicon.svg" />
+    <!--    上传控件-->
+    <link rel="stylesheet" href="/fileinput/css/fileinput.min.css" />
+    <script type="text/javascript" src="/fileinput/js/fileinput.min.js"></script>
+    <script type="text/javascript" src="/fileinput/js/zh.js"></script>
+    <title>Designed By Mintimate</title>
+    crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>图床页面</title>
 </head>
 <body>
@@ -47,17 +35,17 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav mr-lg-auto">
             <li class="nav-item">
                 <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item ml-3">
+            <li class="nav-item ml-lg-3">
                 <a class="nav-link" href="/imageType">
                     图床
                 </a>
             </li>
             <!--Homebrew-->
-            <li class="nav-item dropdown ml-3">
+            <li class="nav-item dropdown ml-lg-3">
                 <a class="nav-link dropdown-toggle" href="#" id="fileHost" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     文件中转站
@@ -69,7 +57,7 @@
                     <a class="dropdown-item text-light" href="/fileType">中转站</a>
                 </div>
             </li>
-            <li class="nav-item dropdown ml-3">
+            <li class="nav-item dropdown ml-lg-3">
                 <a class="nav-link dropdown-toggle" href="#" id="infoDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     数据中心
@@ -83,29 +71,33 @@
             </li>
         </ul>
         <!-- 导航栏右侧 -->
-        <ul class="navbar-nav">
-            <li class="nav-item ml-xl-3 align-content-center">
+        <ul class="navbar-nav ml-lg-auto">
+            <li class="nav-item ml-lg-3 align-content-center">
                 <a href="/support" class="nav-link">创作支持</a>
             </li>
-            <li class="nav-item ml-xl-3 active">
-                <a th:if="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/login" class="nav-link ">登录</a>
-                <div th:unless="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/admin" onclick="goToAdmin()" class="border bg-light text-dark btn">
-                    <img class="rounded-circle" style=" height:1.9rem;" th:src="@{'https://v1.alapi.cn/api/avatar?size=100&email='+${#httpServletRequest.getSession().getAttribute('sessionEmail')}}"> <span th:text="${#httpServletRequest.getSession().getAttribute('sessionUser')}" class="align-text-top" style="padding-left: 0.625rem;">Mintimate</span>
+            <li class="nav-item ml-lg-3 active">
+                <a th:if="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/login"
+                   class="nav-link ">登录</a>
+                <div th:unless="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}"
+                     href="/userAdmin/admin" onclick="goToAdmin()" class="border bg-light text-dark btn">
+                    <img class="rounded-circle" style=" height:1.9rem;" th:src="@{'/userAdmin/getAvatar/'+${#httpServletRequest.getSession().getAttribute('sessionEmail')}}">
+                    <span th:text="${#httpServletRequest.getSession().getAttribute('sessionUser')}"
+                          class="align-text-top" style="padding-left: 0.625rem;">Mintimate</span>
                 </div>
             </li>
         </ul><!-- 导航栏右侧end -->
     </div>
 </nav>
 <!--content-->
-<div class="container pt-5 mt-5 mb-5 pb-5 ">
-    <div class="row thumbnail center col-sm-12">
-        <div class="row">
-            <div class="col-lg-1 col-3">
-                <img class="img-circle img-rounded  pt-3" th:src="@{'https://v1.alapi.cn/api/avatar?size=100&email='+${#httpServletRequest.getSession().getAttribute('sessionEmail')}}"/>
-            </div>
-            <div class="col-lg-5 col-3 pl-lg-5 align-self-end">
-                <span th:text="${#httpServletRequest.getSession().getAttribute('sessionUser')}" class="row">Mintimate</span>
-                <span class="row btn btn-xs bg-dark" style="color: floralwhite;">会员</span>
+<div class="container pt-5 pb-5">
+    <div class="row thumbnail center">
+        <div class="row pb-3">
+            <div class="text-left text-dark btn btn-lg col-lg-6 pl-lg-5">
+                <img class="rounded-circle"
+                     th:src="@{'/userAdmin/getAvatar/'+${#httpServletRequest.getSession().getAttribute('sessionEmail')}}">
+                <span id="theUserName" th:text="${#httpServletRequest.getSession().getAttribute('sessionUser')}"
+                      class="align-text-top" style="padding-left: 0.625rem;">Mintimate</span>
+                <span class="btn btn-xs bg-dark" style="color: floralwhite;">普通用户</span>
             </div>
             <div class="col-lg-6  text-center align-self-center pt-1">
                 <p class=" alert alert-danger" style="font-size: small;">
@@ -115,71 +107,37 @@
                     点此退出账号
                 </a>
             </div>
-            <div th:if="${status}=='success'" class="col-lg-12 text-center  pb-1">
-                <p class=" alert alert-success" style="font-size: smaller;">文件上传成功</p>
-            </div>
-            <div th:if="${status}=='error'" class="col-lg-12 text-center  pt-2 pb-1">
-                <p class=" alert alert-success" style="font-size: smaller;">文件上传成功</p>
-            </div>
-            <div th:if="${status}==null" class=" col-lg-12 pb-4">
-            </div>
         </div>
-
+        <!--选项卡-->
         <ul class="nav nav-tabs " id="myTabs">
             <li><a class="nav-link nav-item active" href="#userHome" data-toggle="tab">图片上传</a></li>
-            <li><a class="nav-link nav-item" href="#userHome" data-toggle="tab">更多功能请联系管理员</a></li>
         </ul>
-
-        <!-- Tab panes -->
+        <!--选项卡内容-->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="userHome">
                 <div class="text-center row">
                     <div class="col-12 text-center">
                         <h5>上传到图床</h5>
                     </div>
-                    <div class="col-12 ">
-
-                        <table class="table table-hover table-light text-center">
-                            <thead>
-                            <tr>
-                                <th>选择类别</th>
-                                <th>选择图片</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <form action="/imageHost/upload" enctype="multipart/form-data" method="post">
-                                <tr>
-                                    <td>
-                                        <!-- 图片分类选项-->
-                                        <select name="imageType" class="custom-select">
-                                            <span th:each="type:${imageTypes}">
-                                            <option th:value="${type.getImageType()}" th:text="${type.getImageType()}">
-                                            </option>
-                                            </span>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="customFileLang" name="file"
-                                                   lang="es">
-                                            <label class="custom-file-label" for="customFileLang">点击选择图片</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <button type="submit" class="btn btn-danger btn-block">上传</button>
-                                    </td>
-                                </tr>
-                            </form>
-                            </tbody>
-                        </table>
+                    <div class="col-12 mb-2">
+                        <span class="col-6">图片分类：</span>
+                        <select id="imageSelect" name="imageType" class="imageSelect col-6 custom-select">
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <div class="col-sm-12">
+                            <input id="input-image" name="file" multiple type="file" data-show-caption="true">
+                        </div>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <span id="download"></span>
                     </div>
                 </div>
             </div>
+            <script src="/fileinput/myUploadFile.js"></script>
+            <script src="/js/fileImageType.js"></script>
         </div>
     </div>
 </div>
-
 </body>
 </html>
