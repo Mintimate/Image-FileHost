@@ -1,3 +1,9 @@
+
+# 停止维护
+因为我现在已经不用这个项目了，基本都是前后端分离开发了。这个项目很久没看了，很多都忘记了，不在维护。
+
+除了SQL，其他都开源了。至于SQL文件，主要是我貌似弄丢了～～
+
 ![](introduction.png)
 ![](https://img.shields.io/badge/Springboot-2.3.4-green)
 ![](https://img.shields.io/badge/Mybatis%20Plus-3.4.0-green)
@@ -20,7 +26,7 @@
 - 导入SQL文件，更改项目内application.yml文件内SQL地址为自己地址
 - maven编译并部署到服务器上使用。
 
-项目还在测试，如果需要SQL文件：
+项目还在测试：
 - Email：198330181@qq.com
 - QQ：198330181
 
@@ -49,7 +55,10 @@ controller层:
 具体请移步到我的个人博客：Mintimate's Blog 博客内也有我联系方式。
 
 # 关于开源
-象征性开源，给刚刚开始学Mybatis、Spring的人一些参考。另外，不再加一用Thymeleaf，建议使用Vue做前端。
+象征性开源，给刚刚开始学Mybatis、Spring的人一些参考。建议使用Vue做前端。
+2022.06.02
+比如，我的其他项目：
+- [https://tool.mintimate.cn](https://tool.mintimate.cn)
 
 # 项目后续
-项目后续可能不会更新，现在前后端分离为常态，后续也可能把项目前端换为Vue，或者后端重构为PHP。
+项目后续可能不会更新，现在前后端分离为常态，后续也可能把项目前端换为Vue
